@@ -49,6 +49,6 @@ abstract class BaseTest extends TestCase
      */
     protected function createClient($rootDir = ''): EtcdClient
     {
-        return EtcdClientFactory::create(EtcdTestEnv::getTestHost(), EtcdTestEnv::getTestPort(), $rootDir);
+        return (new EtcdClientFactory())->create(EtcdTestEnv::getTestHost(), EtcdTestEnv::getTestPort(), $rootDir);
     }
 }

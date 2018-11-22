@@ -11,7 +11,7 @@ class EtcdClientFactoryTest extends BaseTest
 {
     public function testCreate()
     {
-        $client = EtcdClientFactory::create(EtcdTestEnv::getTestHost(), EtcdTestEnv::getTestPort(), __METHOD__);
+        $client = (new EtcdClientFactory())->create(EtcdTestEnv::getTestHost(), EtcdTestEnv::getTestPort(), __METHOD__);
         $this->assertInstanceOf(EtcdClient::class, $client);
     }
 
@@ -19,7 +19,7 @@ class EtcdClientFactoryTest extends BaseTest
     {
         putenv(EtcdClientFactory::ENV_VAR_HOST . '="127.0.0.1"');
         putenv(EtcdClientFactory::ENV_VAR_PORT . '=24001');
-        $client = EtcdClientFactory::createFromEnv(__METHOD__);
+        $client = (new EtcdClientFactory())->createFromEnv(__METHOD__);
         $this->assertInstanceOf(EtcdClient::class, $client);
     }
 
@@ -28,7 +28,7 @@ class EtcdClientFactoryTest extends BaseTest
         $this->expectException(NoEnvVarsException::class);
 
         putenv(EtcdClientFactory::ENV_VAR_HOST . '=');
-        EtcdClientFactory::createFromEnv(__METHOD__);
+        (new EtcdClientFactory())->createFromEnv(__METHOD__);
     }
 
     public function testCreateFromEnvWithEmptyEtcdPort()
@@ -36,13 +36,13 @@ class EtcdClientFactoryTest extends BaseTest
         $this->expectException(NoEnvVarsException::class);
 
         putenv(EtcdClientFactory::ENV_VAR_PORT . '=');
-        EtcdClientFactory::createFromEnv(__METHOD__);
+        (new EtcdClientFactory())->createFromEnv(__METHOD__);
     }
 
     public function testCreateNoCache()
     {
-        $client1 = EtcdClientFactory::create('localhost', 2379, __METHOD__);
-        $client2 = EtcdClientFactory::create('localhost', 2379, __METHOD__);
+        $client1 = (new EtcdClientFactory())->create('localhost', 2379, __METHOD__);
+        $client2 = (new EtcdClientFactory())->create('localhost', 2379, __METHOD__);
         $this->assertNotSame($client1, $client2);
     }
 
@@ -50,8 +50,8 @@ class EtcdClientFactoryTest extends BaseTest
     {
         putenv(EtcdClientFactory::ENV_VAR_HOST . '="127.0.0.1"');
         putenv(EtcdClientFactory::ENV_VAR_PORT . '=24001');
-        $client1 = EtcdClientFactory::createFromEnv(__METHOD__);
-        $client2 = EtcdClientFactory::createFromEnv(__METHOD__);
+        $client1 = (new EtcdClientFactory())->createFromEnv(__METHOD__);
+        $client2 = (new EtcdClientFactory())->createFromEnv(__METHOD__);
         $this->assertNotSame($client1, $client2);
     }
 }

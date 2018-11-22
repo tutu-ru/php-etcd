@@ -17,7 +17,7 @@ class EtcdClientFactory
      * @param string $rootDir
      * @return EtcdClient
      */
-    public static function create(string $host, int $port, string $rootDir = ''): EtcdClient
+    public function create(string $host, int $port, string $rootDir = ''): EtcdClient
     {
         $server = sprintf('http://%s:%d', $host, $port);
         return new EtcdClient($server, $rootDir);
@@ -29,7 +29,7 @@ class EtcdClientFactory
      * @return EtcdClient
      * @throws NoEnvVarsException
      */
-    public static function createFromEnv(string $rootDir = ''): EtcdClient
+    public function createFromEnv(string $rootDir = ''): EtcdClient
     {
         $host = getenv(self::ENV_VAR_HOST);
         $port = getenv(self::ENV_VAR_PORT);
@@ -44,6 +44,6 @@ class EtcdClientFactory
                 )
             );
         }
-        return self::create($host, (int)$port, $rootDir);
+        return $this->create($host, (int)$port, $rootDir);
     }
 }
