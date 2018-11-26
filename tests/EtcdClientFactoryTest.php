@@ -11,7 +11,7 @@ class EtcdClientFactoryTest extends BaseTest
 {
     public function testCreate()
     {
-        $client = (new EtcdClientFactory())->create(EtcdTestEnv::getTestHost(), EtcdTestEnv::getTestPort(), __METHOD__);
+        $client = $this->createClient(__METHOD__);
         $this->assertInstanceOf(EtcdClient::class, $client);
     }
 

@@ -10,6 +10,10 @@ use TutuRu\Etcd\EtcdClientFactory;
 
 abstract class BaseTest extends TestCase
 {
+    protected const TEST_HOST = 'localhost';
+    protected const TEST_PORT = 2379;
+
+
     public function setUp()
     {
         parent::setUp();
@@ -19,6 +23,7 @@ abstract class BaseTest extends TestCase
 
     public function tearDown()
     {
+        $this->flushData();
         parent::tearDown();
     }
 
@@ -37,9 +42,21 @@ abstract class BaseTest extends TestCase
     }
 
 
+    protected function getTestHost()
+    {
+        return getenv('TEST_ETCD_HOST') ?: self::TEST_HOST;
+    }
+
+
+    protected function getTestPort()
+    {
+        return getenv('TEST_ETCD_PORT') ?: self::TEST_PORT;
+    }
+
+
     protected function getNativeClient(): NativeClient
     {
-        return new NativeClient(EtcdTestEnv::getTestServer());
+        return new NativeClient(sprintf('http://%s:%d', self::TEST_HOST, self::TEST_PORT));
     }
 
 
@@ -49,6 +66,6 @@ abstract class BaseTest extends TestCase
      */
     protected function createClient($rootDir = ''): EtcdClient
     {
-        return (new EtcdClientFactory())->create(EtcdTestEnv::getTestHost(), EtcdTestEnv::getTestPort(), $rootDir);
+        return (new EtcdClientFactory())->create(self::TEST_HOST, self::TEST_PORT, $rootDir);
     }
 }
