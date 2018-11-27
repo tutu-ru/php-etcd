@@ -17,13 +17,6 @@ class GetDirectoryNodesAsArrayTest extends EtcdClientMethodsTest
     }
 
 
-    public function tearDown()
-    {
-        $this->clearFixture();
-        parent::tearDown();
-    }
-
-
     public function testFailsOnUnexistent()
     {
         $this->expectException(KeyNotFoundException::class);
@@ -54,6 +47,20 @@ class GetDirectoryNodesAsArrayTest extends EtcdClientMethodsTest
                 'f2' => 'vs2_2',
             ],
             $res
+        );
+    }
+
+
+    public function testGetProperty()
+    {
+        $this->prepareFixture();
+        $client = $this->createClient();
+        $result = $client->getDirectoryNodesAsArray('/dir/sub2/f1');
+        $this->assertEquals(
+            [
+                'f1' => 'vs2_1',
+            ],
+            $result
         );
     }
 

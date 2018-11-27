@@ -10,13 +10,6 @@ class GetKeyValuePairsTest extends EtcdClientMethodsTest
 {
     use FixtureTrait;
 
-    public function tearDown()
-    {
-        $this->clearFixture();
-        parent::tearDown();
-    }
-
-
     public function testFailsOnNotExistingDir()
     {
         $this->expectException(KeyNotFoundException::class);
@@ -69,6 +62,20 @@ class GetKeyValuePairsTest extends EtcdClientMethodsTest
                 '/dir/sub2/f2' => 'vs2_2',
             ],
             $res
+        );
+    }
+
+
+    public function testGetProperty()
+    {
+        $this->prepareFixture();
+        $client = $this->createClient();
+        $result = $client->getKeyValuePairs('/dir/sub2/f1');
+        $this->assertEquals(
+            [
+                '/dir/sub2/f1' => 'vs2_1',
+            ],
+            $result
         );
     }
 }

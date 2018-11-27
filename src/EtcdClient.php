@@ -319,20 +319,37 @@ class EtcdClient
     public function getDirectoryNodesAsArray($dir)
     {
         $nodes = $this->getKeyValuePairs($dir, true);
-        $dir = trim($dir, self::PATH_SEP) . self::PATH_SEP;
-        if ($dir !== self::PATH_SEP) {
-            $dir = self::PATH_SEP . $dir;
-        }
-        if (!is_null($this->rootDir)) {
-            $dir = self::PATH_SEP . trim($this->rootDir, self::PATH_SEP) . $dir;
-        }
+        $dir = $this->getFullNormalizedPath($dir);
         $result = [];
-        foreach ($nodes as $k => $v) {
-            $realKey = substr($k, strlen($dir));
-            $parts = explode(self::PATH_SEP, $realKey);
-            $this->addToDepth($result, $parts, $v);
+        if (count($nodes) === 1 && array_keys($nodes)[0] === $dir) {
+            // $dir is property
+            $parts = explode(self::PATH_SEP, $dir);
+            $result[$parts[count($parts) - 1]] = $nodes[$dir];
+        } else {
+            foreach ($nodes as $k => $v) {
+                $realKey = substr($k, strlen($dir));
+                $parts = explode(self::PATH_SEP, $realKey);
+                array_shift($parts); // remove first empty element
+                $this->addToDepth($result, $parts, $v);
+            }
         }
         return $result;
+    }
+
+
+    private function getFullNormalizedPath(string $path): string
+    {
+        $path = trim($path, self::PATH_SEP) . self::PATH_SEP;
+        if ($path !== self::PATH_SEP) {
+            $path = self::PATH_SEP . $path;
+        }
+        if (!is_null($this->rootDir)) {
+            $path = self::PATH_SEP . trim($this->rootDir, self::PATH_SEP) . $path;
+        }
+        if (mb_substr($path, -1) === self::PATH_SEP) {
+            $path = mb_substr($path, 0, mb_strlen($path) - 1);
+        }
+        return $path;
     }
 
 
