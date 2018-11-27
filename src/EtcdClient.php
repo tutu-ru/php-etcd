@@ -24,7 +24,7 @@ class EtcdClient
     /** @var string */
     private $rootDir;
 
-    const PATH_SEP = '/';
+    public const PATH_SEPARATOR = '/';
     const PREV_EXIST_KEY = 'prevExist';
 
     public function __construct(string $server, $rootDir = '')
@@ -323,12 +323,12 @@ class EtcdClient
         $result = [];
         if (count($nodes) === 1 && array_keys($nodes)[0] === $dir) {
             // $dir is property
-            $parts = explode(self::PATH_SEP, $dir);
+            $parts = explode(self::PATH_SEPARATOR, $dir);
             $result[$parts[count($parts) - 1]] = $nodes[$dir];
         } else {
             foreach ($nodes as $k => $v) {
                 $realKey = substr($k, strlen($dir));
-                $parts = explode(self::PATH_SEP, $realKey);
+                $parts = explode(self::PATH_SEPARATOR, $realKey);
                 array_shift($parts); // remove first empty element
                 $this->addToDepth($result, $parts, $v);
             }
@@ -339,14 +339,14 @@ class EtcdClient
 
     private function getFullNormalizedPath(string $path): string
     {
-        $path = trim($path, self::PATH_SEP) . self::PATH_SEP;
-        if ($path !== self::PATH_SEP) {
-            $path = self::PATH_SEP . $path;
+        $path = trim($path, self::PATH_SEPARATOR) . self::PATH_SEPARATOR;
+        if ($path !== self::PATH_SEPARATOR) {
+            $path = self::PATH_SEPARATOR . $path;
         }
         if (!is_null($this->rootDir)) {
-            $path = self::PATH_SEP . trim($this->rootDir, self::PATH_SEP) . $path;
+            $path = self::PATH_SEPARATOR . trim($this->rootDir, self::PATH_SEPARATOR) . $path;
         }
-        if (mb_substr($path, -1) === self::PATH_SEP) {
+        if (mb_substr($path, -1) === self::PATH_SEPARATOR) {
             $path = mb_substr($path, 0, mb_strlen($path) - 1);
         }
         return $path;
