@@ -57,6 +57,10 @@ class EtcdClient
             if (empty($node)) {
                 throw new EmptyResponseException();
             }
+            if (isset($node['dir']) && (int)$node['dir'] === 1) {
+                // old behaviour for backward compatibility
+                return null;
+            }
             return $node['value'];
         } catch (Etcd\Exception\EtcdException $e) {
             throw $this->exceptionConverter->fromNativeException($e);

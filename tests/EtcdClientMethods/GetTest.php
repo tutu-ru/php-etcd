@@ -67,9 +67,7 @@ class GetTest extends EtcdClientMethodsTest
     {
         $dirKey = __FUNCTION__;
         $this->createClient()->makeDir($dirKey);
-        // @ - to supress error in linkorb/php-etcd
-        // Undefined index: value linkorb/etcd-php/src/Client.php:157
-        $result = @$this->createClient()->getValue($dirKey);
+        $result = $this->createClient()->getValue($dirKey);
         $this->assertNull($result);
     }
 }
