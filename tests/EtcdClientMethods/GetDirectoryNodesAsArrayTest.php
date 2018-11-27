@@ -56,4 +56,17 @@ class GetDirectoryNodesAsArrayTest extends EtcdClientMethodsTest
             $res
         );
     }
+
+
+    public function testClientRootDir()
+    {
+        $result = $this->createClient('dir')->getDirectoryNodesAsArray('sub2/');
+        $this->assertEquals(
+            [
+                'f1' => 'vs2_1',
+                'f2' => 'vs2_2',
+            ],
+            $result
+        );
+    }
 }

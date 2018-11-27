@@ -319,7 +319,13 @@ class EtcdClient
     public function getDirectoryNodesAsArray($dir)
     {
         $nodes = $this->getKeyValuePairs($dir, true);
-        $dir = rtrim($dir, self::PATH_SEP) . self::PATH_SEP;
+        $dir = trim($dir, self::PATH_SEP) . self::PATH_SEP;
+        if ($dir !== self::PATH_SEP) {
+            $dir = self::PATH_SEP . $dir;
+        }
+        if (!is_null($this->rootDir)) {
+            $dir = self::PATH_SEP . trim($this->rootDir, self::PATH_SEP) . $dir;
+        }
         $result = [];
         foreach ($nodes as $k => $v) {
             $realKey = substr($k, strlen($dir));
