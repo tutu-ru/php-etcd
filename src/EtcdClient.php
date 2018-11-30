@@ -11,9 +11,12 @@ use TutuRu\Etcd\Exceptions\InvalidValueException;
 
 class EtcdClient
 {
-    public const FLAG_WAIT = 'wait';
-    public const FLAG_RECURSIVE = 'recursive';
-    public const FLAG_WAIT_INDEX = 'waitIndex';
+    public const PATH_SEPARATOR = '/';
+
+    private const FLAG_WAIT = 'wait';
+    private const FLAG_RECURSIVE = 'recursive';
+    private const FLAG_WAIT_INDEX = 'waitIndex';
+    private const PREV_EXIST_KEY = 'prevExist';
 
     /** @var Etcd\Client */
     private $nativeClient;
@@ -23,9 +26,6 @@ class EtcdClient
 
     /** @var string */
     private $rootDir;
-
-    public const PATH_SEPARATOR = '/';
-    const PREV_EXIST_KEY = 'prevExist';
 
     public function __construct(string $server, $rootDir = '')
     {
